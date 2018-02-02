@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro Babushka - Menu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!---- HEADER START ---->
+    <header>
+        <div class="item_h_mark">
+            <p>★</p>
+        </div>
+        <div class="item_h_name">
+            <h1>Bistro Babushka</h1>
+        </div>
+    </header>
+
+    <!---- MAIN START ---->
+    <main>
+        <div class="filter_container">
+            <div class="filter">
+                <div class="menu_heading">
+                    <h2 id="overskrift" class="overskrift" data-overskrift>Menu</h2>
+                </div>
+                <nav class="filter_knapper">
+
+                    <button id="filter-alle" class="btn-alle">Alle</button>
+                    <button id="filter-forretter" class="btn-forretter">Forretter</button>
+                    <button id="filter-hovedretter" class="btn-hovedretter">Hovedretter</button>
+                    <button id="filter-desserter" class="btn-desserter">Desserter</button>
+                    <button id="filter-drikkevarer" class="btn-drikkevarer">Drikkevarer</button>
+                    <button id="filter-sideorders" class="btn-sideorders">Sideorders</button>
+                </nav>
+            </div>
+        </div>
+        <section class="templatemodtager"></section>
+
+        <template class="mytemplate">
+        <article class="menu-item">
+            <div class="item_a billede_container">
+                <img class="billede" src="">
+            </div>
+            <div class="item_b">
+                <h2 class="navn" data-navn></h2>
+            </div>
+            <div class="item_c">
+                <p class="kortbeskrivelse"></p>
+            </div>
+            <div class="item_d">
+                <p class="pris"></p>
+            </div>
+        </article>
+    </template>
+    </main>
+
+    <footer>
+        <section class="footer_main">
+            <adress class="footer_1">
+                <h3>Adresse:</h3>
+                <p>Grønnegade 97</p>
+                <p>1234 København K</p>
+            </adress>
+            <aside class="footer_2">
+                <h3>Åbningstider:</h3>
+                <p>Mandag - Fredag: 10:30-22:00</p>
+                <p>Lørdag: 12:00-23:00</p>
+            </aside>
+        </section>
+
+    </footer>
+    <script>
+        //// JAVASCRIPT START ////
+        let retter;
+        // Hent json
+        async function loadJson() {
+            let menuListe = await fetch("json/menu.json");
+            retter = await menuListe.json();
+            // Find og filtrer retter efter kategori og gem dem i nyt array
+            //            let alle = retter.filter(ret => ret.kategori == "retter");
+            let forretter = retter.filter(ret => ret.kategori == "forretter");
+            let hovedretter = retter.filter(ret => ret.kategori == "hovedretter");
+            let desserter = retter.filter(ret => ret.kategori == "desserter");
+            let drikkevarer = retter.filter(ret => ret.kategori == "drikkevarer");
+            let sideorders = retter.filter(ret => ret.kategori == "sideorders");
+
+            document.querySelector("#filter-alle").addEventListener("click", () => {
+                visRetter(retter, "Menu")
+            });
+            document.querySelector("#filter-forretter").addEventListener("click", () => {
+                visRetter(forretter, "Forretter")
+            });
+            document.querySelector("#filter-hovedretter").addEventListener("click", () => {
+                visRetter(hovedretter, "Hovedretter")
+            });
+            document.querySelector("#filter-desserter").addEventListener("click", () => {
+                visRetter(desserter, "Desserter")
+            });
+            document.querySelector("#filter-drikkevarer").addEventListener("click", () => {
+                visRetter(drikkevarer, "Drikkevarer")
+            });
+            document.querySelector("#filter-sideorders").addEventListener("click", () => {
+                visRetter(sideorders, "Sideorders")
+            });
+
+            visRetter(retter, "Menu");
+            //            visRetter(forretter);
+            //            visRetter(hovedretter);
+            //            visRetter(desserter);
+            //            visRetter(drikkevarer);
+            //            visRetter(sideorders);
+        }
+
+        function visRetter(retter, overskrift) {
+            document.querySelector("[data-overskrift]").textContent = overskrift;
+
+            let tModtager = document.querySelector(".templatemodtager");
+            let myTemplate = document.querySelector(".mytemplate");
+            tModtager.innerHTML = "";
+            retter.forEach(hverRet => {
+                // klon template og indsæt "ret" properties
+                let klon = myTemplate.cloneNode(true).content;
+                klon.querySelector(".billede").src = "img/small/" + hverRet.billede + "-sm.jpg";
+                klon.querySelector(".navn").textContent = hverRet.navn;
+                klon.querySelector(".kortbeskrivelse").textContent = hverRet.kortbeskrivelse;
+                klon.querySelector(".pris").textContent = hverRet.pris + " kr.";
+                tModtager.appendChild(klon);
+                console.log(retter);
+            })
+        }
+
+        document.addEventListener("DOMContentLoaded", loadJson);
+        //        document.addEventListener("#filter-alle", "#filter-forretter", "#filter-hovedretter", "#filter-desserter", "#filter-drikkevarer", "#filter-sideorders").addClass(".filter_knapper_active");
+        //        document.querySelector("#filter-alle").addClass("click", ".filter_knapper_active");
+    </script>
+
+</body>
+
+</html>
