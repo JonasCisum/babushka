@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro Babushka - Menu</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+    <!---- BODY START ---->
+
+    <!---- HEADER START ---->
+    <header>
+        <div class="item_h_mark">
+            <p>★</p>
+        </div>
+        <div class="item_h_name">
+            <h1>Bistro Babushka</h1>
+        </div>
+    </header>
+
+    <!---- FILTER START ---->
+    <div class="filter_container">
+        <div class="filter">
+            <div class="menu_heading">
+                <h2>Menu</h2>
+            </div>
+            <div class="filter_knapper">
+
+                <button class="btn-alle">Alle</button>
+                <button class="btn-forretter">Forretter</button>
+                <button class="btn-hovedretter">Hovedretter</button>
+                <button class="btn-desserter">Desserter</button>
+                <button class="btn-drikkevarer">Drikkevarer</button>
+            </div>
+        </div>
+    </div>
+
+    <!---- MAIN START ---->
+    <div class="main">
+        <div class="templatemodtager"></div>
+
+        <template class="mytemplate">
+        <div class="menu-item">
+            <div class="item_a billede_container">
+                <img class="billede" src="">
+            </div>
+            <div class="item_b">
+                <h2 class="navn" data-navn></h2>
+            </div>
+            <div class="item_c">
+                <p class="kortbeskrivelse"></p>
+            </div>
+            <div class="item_d">
+                <p class="pris"></p>
+            </div>
+        </div>
+    </template>
+    </div>
+
+    <footer>
+        <div class="footer_main">
+            <div class="footer_1">
+                <adress>
+                    <h3>Adresse:</h3>
+                    <p>Grønnegade 97</p>
+                    <p>1234 København K</p>
+                </adress>
+            </div>
+            <div class="footer_2">
+                <aside>
+                    <h3>Åbningstider:</h3>
+                    <p>Mandag - Fredag: 10:30-22:00</p>
+                    <p>Lørdag: 12:00-23:00</p>
+                </aside>
+            </div>
+        </div>
+
+    </footer>
+    <script>
+        //// JAVASCRIPT START ////
+        let retter;
+        async function loadJson() {
+            let menuListe = await fetch("json/menu.json");
+            retter = await menuListe.json();
+            visRetter(retter);
+        }
+
+        document.addEventListener("DOMContentLoaded", loadJson);
+
+        let tModtager = document.querySelector(".templatemodtager");
+        let myTemplate = document.querySelector(".mytemplate");
+
+        function visRetter(retter) {
+            retter.forEach(hverRet => {
+                let klon = myTemplate.cloneNode(true).content;
+
+                klon.querySelector(".billede").src = "img/small/" + hverRet.billede + "-sm.jpg";
+                //                klon.querySelector(".kategori").textContent = hverRet.kategori;
+                //                klon.querySelector(".oprindelsesregion").textContent = hverRet.oprindelsesregion;
+                klon.querySelector(".navn").textContent = hverRet.navn;
+                klon.querySelector(".kortbeskrivelse").textContent = hverRet.kortbeskrivelse;
+                klon.querySelector(".pris").textContent = hverRet.pris + " kr.";
+                tModtager.appendChild(klon);
+                console.log(retter);
+            })
+        }
+    </script>
+
+</body>
+
+</html>
